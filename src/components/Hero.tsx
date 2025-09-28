@@ -62,8 +62,8 @@ const Hero = () => {
             </Button>
             <Button 
               onClick={() => scrollToSection('#contact')}
-              variant="outline"
-              className="text-lg px-8 py-4 border-white/30 text-white hover:bg-white/10"
+              variant="secondary"
+              className="text-lg px-8 py-4 bg-white/20 backdrop-blur-sm border border-white/30 text-white hover:bg-white/30"
             >
               Nous contacter
             </Button>
