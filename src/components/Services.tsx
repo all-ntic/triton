@@ -174,20 +174,12 @@ const Services = () => {
             <p className="text-xl mb-8 text-foreground">
               Contactez-nous dès maintenant pour un devis personnalisé ou une présentation de nos services.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
-                onClick={() => scrollToSection('#contact')}
-                className="btn-accent bg-orange hover:bg-orange/90"
-              >
-                Demander un devis
-              </Button>
-              <Button 
-                variant="outline"
-                className="border-white/30 text-white hover:bg-white/10"
-              >
-                Voir le catalogue complet
-              </Button>
-            </div>
+            <Button 
+              onClick={() => scrollToSection('#contact')}
+              className="btn-accent bg-orange hover:bg-orange/90"
+            >
+              Demander un devis
+            </Button>
           </div>
         </div>
       </div>
