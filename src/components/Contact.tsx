@@ -53,7 +53,10 @@ const Contact = () => {
         }]);
 
       if (dbError) {
-        console.error("Database error:", dbError);
+        // Only log in development to avoid exposing sensitive details
+        if (import.meta.env.DEV) {
+          console.error("Database error:", dbError);
+        }
         throw new Error("Erreur lors de l'enregistrement du message");
       }
 
@@ -63,7 +66,10 @@ const Contact = () => {
       });
 
       if (emailError) {
-        console.error("Email error:", emailError);
+        // Only log in development
+        if (import.meta.env.DEV) {
+          console.error("Email error:", emailError);
+        }
         throw new Error("Erreur lors de l'envoi de l'email");
       }
 
@@ -80,7 +86,11 @@ const Contact = () => {
         message: ""
       });
     } catch (error: any) {
-      console.error("Error submitting form:", error);
+      // Only log in development to avoid exposing sensitive details
+      if (import.meta.env.DEV) {
+        console.error("Error submitting form:", error);
+      }
+      
       toast({
         title: "Erreur",
         description: error.message || "Une erreur est survenue lors de l'envoi du message.",
