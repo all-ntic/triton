@@ -4,6 +4,16 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { MapPin, Phone, Mail, Clock, Send } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { z } from "zod";
+
+const contactSchema = z.object({
+  name: z.string().trim().min(1, "Le nom est requis").max(100, "Le nom doit faire moins de 100 caractères"),
+  email: z.string().trim().email("Email invalide").max(255, "L'email doit faire moins de 255 caractères"),
+  company: z.string().trim().max(100, "Le nom de l'entreprise doit faire moins de 100 caractères").optional(),
+  subject: z.string().trim().min(1, "Le sujet est requis").max(200, "Le sujet doit faire moins de 200 caractères"),
+  message: z.string().trim().min(1, "Le message est requis").max(2000, "Le message doit faire moins de 2000 caractères"),
+});
 
 const Contact = () => {
   const { toast } = useToast();
@@ -27,13 +37,41 @@ const Contact = () => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Simulate form submission
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      // Validate form data
+      const validatedData = contactSchema.parse(formData);
+
+      // Save to database
+      const { error: dbError } = await supabase
+        .from('contact_messages')
+        .insert([{
+          name: validatedData.name,
+          email: validatedData.email,
+          company: validatedData.company || null,
+          subject: validatedData.subject,
+          message: validatedData.message,
+        }]);
+
+      if (dbError) {
+        console.error("Database error:", dbError);
+        throw new Error("Erreur lors de l'enregistrement du message");
+      }
+
+      // Send email
+      const { error: emailError } = await supabase.functions.invoke('send-contact-email', {
+        body: validatedData,
+      });
+
+      if (emailError) {
+        console.error("Email error:", emailError);
+        throw new Error("Erreur lors de l'envoi de l'email");
+      }
+
       toast({
         title: "Message envoyé !",
         description: "Nous vous contacterons dans les plus brefs délais.",
       });
+      
       setFormData({
         name: "",
         email: "",
@@ -41,7 +79,16 @@ const Contact = () => {
         subject: "",
         message: ""
       });
-    }, 1000);
+    } catch (error: any) {
+      console.error("Error submitting form:", error);
+      toast({
+        title: "Erreur",
+        description: error.message || "Une erreur est survenue lors de l'envoi du message.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const contactInfo = [
