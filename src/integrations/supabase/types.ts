@@ -14,406 +14,343 @@ export type Database = {
   }
   public: {
     Tables: {
-      chatbot_conversations: {
+      announcements: {
         Row: {
-          bot_response: string
+          announcement_type: string
+          author_id: string
+          church_id: string
+          content: string
           created_at: string
           id: string
-          matched_knowledge_id: string | null
-          session_id: string
-          user_message: string
+          title: string
+          updated_at: string
         }
         Insert: {
-          bot_response: string
+          announcement_type: string
+          author_id: string
+          church_id: string
+          content: string
           created_at?: string
           id?: string
-          matched_knowledge_id?: string | null
-          session_id: string
-          user_message: string
+          title: string
+          updated_at?: string
         }
         Update: {
-          bot_response?: string
+          announcement_type?: string
+          author_id?: string
+          church_id?: string
+          content?: string
           created_at?: string
           id?: string
-          matched_knowledge_id?: string | null
-          session_id?: string
-          user_message?: string
+          title?: string
+          updated_at?: string
         }
         Relationships: [
           {
-            foreignKeyName: "chatbot_conversations_matched_knowledge_id_fkey"
-            columns: ["matched_knowledge_id"]
+            foreignKeyName: "announcements_church_id_fkey"
+            columns: ["church_id"]
             isOneToOne: false
-            referencedRelation: "chatbot_knowledge"
+            referencedRelation: "churches"
             referencedColumns: ["id"]
           },
         ]
       }
-      chatbot_knowledge: {
+      churches: {
         Row: {
-          answer: string
-          category: string
           created_at: string
           id: string
-          keywords: string[] | null
-          question: string
+          name: string
           updated_at: string
         }
         Insert: {
-          answer: string
-          category: string
           created_at?: string
           id?: string
-          keywords?: string[] | null
-          question: string
+          name: string
           updated_at?: string
         }
         Update: {
-          answer?: string
-          category?: string
           created_at?: string
           id?: string
-          keywords?: string[] | null
-          question?: string
+          name?: string
           updated_at?: string
         }
         Relationships: []
       }
-      conversations: {
+      donations: {
         Row: {
+          amount: number
+          church_id: string
           created_at: string
+          currency: string
+          donation_type: string
+          donor_email: string | null
+          donor_name: string
+          donor_phone: string
           id: string
-          part_id: string | null
-          participant_1: string
-          participant_2: string
+          notes: string | null
+          payment_status: string | null
           updated_at: string
         }
         Insert: {
+          amount: number
+          church_id: string
           created_at?: string
+          currency?: string
+          donation_type: string
+          donor_email?: string | null
+          donor_name: string
+          donor_phone: string
           id?: string
-          part_id?: string | null
-          participant_1: string
-          participant_2: string
+          notes?: string | null
+          payment_status?: string | null
           updated_at?: string
         }
         Update: {
+          amount?: number
+          church_id?: string
           created_at?: string
+          currency?: string
+          donation_type?: string
+          donor_email?: string | null
+          donor_name?: string
+          donor_phone?: string
           id?: string
-          part_id?: string | null
-          participant_1?: string
-          participant_2?: string
+          notes?: string | null
+          payment_status?: string | null
           updated_at?: string
         }
         Relationships: [
           {
-            foreignKeyName: "conversations_part_id_fkey"
-            columns: ["part_id"]
+            foreignKeyName: "donations_church_id_fkey"
+            columns: ["church_id"]
             isOneToOne: false
-            referencedRelation: "parts"
+            referencedRelation: "churches"
             referencedColumns: ["id"]
           },
+        ]
+      }
+      events: {
+        Row: {
+          church_id: string
+          created_at: string
+          description: string | null
+          end_date: string | null
+          event_type: string
+          id: string
+          location: string | null
+          start_date: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          church_id: string
+          created_at?: string
+          description?: string | null
+          end_date?: string | null
+          event_type: string
+          id?: string
+          location?: string | null
+          start_date: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          church_id?: string
+          created_at?: string
+          description?: string | null
+          end_date?: string | null
+          event_type?: string
+          id?: string
+          location?: string | null
+          start_date?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
           {
-            foreignKeyName: "conversations_participant_1_fkey"
-            columns: ["participant_1"]
+            foreignKeyName: "events_church_id_fkey"
+            columns: ["church_id"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: "churches"
+            referencedColumns: ["id"]
           },
+        ]
+      }
+      group_messages: {
+        Row: {
+          church_id: string
+          created_at: string
+          id: string
+          message: string
+          sender_id: string
+        }
+        Insert: {
+          church_id: string
+          created_at?: string
+          id?: string
+          message: string
+          sender_id: string
+        }
+        Update: {
+          church_id?: string
+          created_at?: string
+          id?: string
+          message?: string
+          sender_id?: string
+        }
+        Relationships: [
           {
-            foreignKeyName: "conversations_participant_2_fkey"
-            columns: ["participant_2"]
+            foreignKeyName: "group_messages_church_id_fkey"
+            columns: ["church_id"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
+            referencedRelation: "churches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      members: {
+        Row: {
+          address: string | null
+          church_id: string
+          created_at: string
+          email: string | null
+          full_name: string
+          id: string
+          membership_status: string | null
+          phone: string
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          church_id: string
+          created_at?: string
+          email?: string | null
+          full_name: string
+          id?: string
+          membership_status?: string | null
+          phone: string
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          church_id?: string
+          created_at?: string
+          email?: string | null
+          full_name?: string
+          id?: string
+          membership_status?: string | null
+          phone?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "members_church_id_fkey"
+            columns: ["church_id"]
+            isOneToOne: false
+            referencedRelation: "churches"
+            referencedColumns: ["id"]
           },
         ]
       }
       messages: {
         Row: {
-          content: string
-          conversation_id: string
           created_at: string
-          file_url: string | null
           id: string
-          message_type: string | null
-          read_at: string | null
+          is_read: boolean | null
+          message: string
+          receiver_id: string
           sender_id: string
         }
         Insert: {
-          content: string
-          conversation_id: string
           created_at?: string
-          file_url?: string | null
           id?: string
-          message_type?: string | null
-          read_at?: string | null
+          is_read?: boolean | null
+          message: string
+          receiver_id: string
           sender_id: string
         }
         Update: {
-          content?: string
-          conversation_id?: string
           created_at?: string
-          file_url?: string | null
           id?: string
-          message_type?: string | null
-          read_at?: string | null
+          is_read?: boolean | null
+          message?: string
+          receiver_id?: string
           sender_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "messages_conversation_id_fkey"
-            columns: ["conversation_id"]
-            isOneToOne: false
-            referencedRelation: "conversations"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "messages_sender_id_fkey"
-            columns: ["sender_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-        ]
-      }
-      parts: {
-        Row: {
-          availability_status: string | null
-          category: string
-          condition: string | null
-          created_at: string
-          currency: string | null
-          description: string | null
-          id: string
-          images: string[] | null
-          is_rare: boolean | null
-          location: string | null
-          part_number: string | null
-          price: number | null
-          seller_id: string
-          title: string
-          updated_at: string
-          vehicle_make: string
-          vehicle_model: string
-          vehicle_year: number | null
-        }
-        Insert: {
-          availability_status?: string | null
-          category: string
-          condition?: string | null
-          created_at?: string
-          currency?: string | null
-          description?: string | null
-          id?: string
-          images?: string[] | null
-          is_rare?: boolean | null
-          location?: string | null
-          part_number?: string | null
-          price?: number | null
-          seller_id: string
-          title: string
-          updated_at?: string
-          vehicle_make: string
-          vehicle_model: string
-          vehicle_year?: number | null
-        }
-        Update: {
-          availability_status?: string | null
-          category?: string
-          condition?: string | null
-          created_at?: string
-          currency?: string | null
-          description?: string | null
-          id?: string
-          images?: string[] | null
-          is_rare?: boolean | null
-          location?: string | null
-          part_number?: string | null
-          price?: number | null
-          seller_id?: string
-          title?: string
-          updated_at?: string
-          vehicle_make?: string
-          vehicle_model?: string
-          vehicle_year?: number | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "parts_seller_id_fkey"
-            columns: ["seller_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-        ]
-      }
-      profiles: {
-        Row: {
-          address: string | null
-          city: string | null
-          company_name: string | null
-          country: string | null
-          created_at: string
-          display_name: string
-          id: string
-          phone: string | null
-          role: Database["public"]["Enums"]["user_role"]
-          updated_at: string
-          user_id: string
-          verified: boolean | null
-        }
-        Insert: {
-          address?: string | null
-          city?: string | null
-          company_name?: string | null
-          country?: string | null
-          created_at?: string
-          display_name: string
-          id?: string
-          phone?: string | null
-          role: Database["public"]["Enums"]["user_role"]
-          updated_at?: string
-          user_id: string
-          verified?: boolean | null
-        }
-        Update: {
-          address?: string | null
-          city?: string | null
-          company_name?: string | null
-          country?: string | null
-          created_at?: string
-          display_name?: string
-          id?: string
-          phone?: string | null
-          role?: Database["public"]["Enums"]["user_role"]
-          updated_at?: string
-          user_id?: string
-          verified?: boolean | null
         }
         Relationships: []
       }
-      transactions: {
+      profiles: {
         Row: {
-          agreed_price: number
-          buyer_id: string
+          church_id: string | null
           created_at: string
-          currency: string | null
+          full_name: string | null
           id: string
-          notes: string | null
-          part_id: string
-          seller_id: string
-          status: string | null
           updated_at: string
+          user_id: string
         }
         Insert: {
-          agreed_price: number
-          buyer_id: string
+          church_id?: string | null
           created_at?: string
-          currency?: string | null
+          full_name?: string | null
           id?: string
-          notes?: string | null
-          part_id: string
-          seller_id: string
-          status?: string | null
           updated_at?: string
+          user_id: string
         }
         Update: {
-          agreed_price?: number
-          buyer_id?: string
+          church_id?: string | null
           created_at?: string
-          currency?: string | null
+          full_name?: string | null
           id?: string
-          notes?: string | null
-          part_id?: string
-          seller_id?: string
-          status?: string | null
           updated_at?: string
+          user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "transactions_buyer_id_fkey"
-            columns: ["buyer_id"]
+            foreignKeyName: "profiles_church_id_fkey"
+            columns: ["church_id"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "transactions_part_id_fkey"
-            columns: ["part_id"]
-            isOneToOne: false
-            referencedRelation: "parts"
+            referencedRelation: "churches"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "transactions_seller_id_fkey"
-            columns: ["seller_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
           },
         ]
       }
-      user_ratings: {
+      user_roles: {
         Row: {
-          comment: string | null
           created_at: string
           id: string
-          rated_user_id: string
-          rater_user_id: string
-          rating: number | null
-          transaction_id: string | null
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
         }
         Insert: {
-          comment?: string | null
           created_at?: string
           id?: string
-          rated_user_id: string
-          rater_user_id: string
-          rating?: number | null
-          transaction_id?: string | null
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
         }
         Update: {
-          comment?: string | null
           created_at?: string
           id?: string
-          rated_user_id?: string
-          rater_user_id?: string
-          rating?: number | null
-          transaction_id?: string | null
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "user_ratings_rated_user_id_fkey"
-            columns: ["rated_user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "user_ratings_rater_user_id_fkey"
-            columns: ["rater_user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "user_ratings_transaction_id_fkey"
-            columns: ["transaction_id"]
-            isOneToOne: false
-            referencedRelation: "transactions"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_user_church_id: { Args: { _user_id: string }; Returns: string }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      user_role: "mechanic" | "dealer" | "parts_seller"
+      app_role: "pastor" | "member" | "admin"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -541,7 +478,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      user_role: ["mechanic", "dealer", "parts_seller"],
+      app_role: ["pastor", "member", "admin"],
     },
   },
 } as const
